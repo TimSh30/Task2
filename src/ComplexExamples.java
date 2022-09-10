@@ -52,41 +52,13 @@ public class ComplexExamples {
     };
 
     static void sortByName(Person[] person) {
-
-
-        /*List<Person> list = Stream.of(person).collect(Collectors.toList());
-        list.stream().distinct().forEach((x) -> System.out.println(x.id + " " + x.name)); // добавить notNull
-
-        List<String> books = list.stream().map(author -> author.getName())
-                .flatMap(l -> list.stream())
-                .map(book -> book.getName())
-                .collect(Collectors.toList());*/
-
-
-        Map<String, List<Integer>> mp = Stream.of(person)
-                .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.groupingBy(Person::getName,
-                        Collectors.mapping(Person::getId, Collectors.toList())));
-        Stream.of(mp).forEach(System.out::println);
-
-        Map<String, Long> mp1 = Stream.of(person).distinct().collect(Collectors.groupingBy(Person::getName,
-                Collectors.counting()));
-        System.out.println(mp1);
-
-
-        // List<Person> names = (List<Person>) Arrays.stream(RAW_DATA).filter(Objects::nonNull).map(author -> author.getName()).peek(name -> System.out.println(name))).collect(Collectors.toList()); // log.debug("")
-
-        //System.out.println(names);
-
-
-        /*Map<Person, Integer> counter = new HashMap<>();
-        for (Person x : list) {
-            int newValue = counter.getOrDefault(x, 0) + 1;
-            counter.put(x, newValue);
-        }*/
-
-
+        try {
+            System.out.println(Stream.of(person).distinct().collect(Collectors.groupingBy(Person::getName,
+                    Collectors.counting())));
+        } catch (NullPointerException NPE) {
+            System.out.println("person has null");
+            NPE.printStackTrace();
+        }
     }
 
         /*  Raw data:
@@ -145,12 +117,23 @@ public class ComplexExamples {
         System.out.println("Duplicate filtered, grouped by name, sorted by name and id:");
         System.out.println();
 
+        System.out.print("Test 1: ");
         sortByName(RAW_DATA);
 
-        System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
-        //System.out.println(outSumma(new Integer[]{3, 4, 2, 7, 8}, 10));
+        //sortByName(null);
 
+        //System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
+        System.out.print("Test 2: ");
+        //System.out.println(outSumma(null, 10));
+        System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
+        System.out.print("Test 3: ");
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
+        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
+        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
+        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
+        System.out.println(fuzzySearch("lw", "cartwheel")); // false
 
 
         /*
@@ -194,32 +177,36 @@ public class ComplexExamples {
     }
 
     static List<Integer> outSumma(Integer[] array, int summa) {
-        List<Integer> listFromArray = new ArrayList<>();
 
-        if (array.equals(null)) return null;
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 1; j < array.length; j++) {
-                if (summa - array[j] == array[i]) {
-                    listFromArray.add(array[i]);
-                    listFromArray.add(array[j]);
+        List<Integer> listFromArray = new ArrayList<>();
+        try {
+            for (Integer integer : array) {
+                int j = 1;
+                while (j < array.length) {
+                    if (summa - array[j] == integer) {
+                        listFromArray.add(integer);
+                        listFromArray.add(array[j]);
+                    }
+                    j++;
                 }
             }
+            return listFromArray.stream().distinct().collect(Collectors.toList());
+        } catch (NullPointerException NPE) {
+            System.out.println("array has null");
+            return null;
         }
-        return listFromArray.stream().distinct().collect(Collectors.toList());
     }
 
     static boolean fuzzySearch(String pattern, String chars) {
-        List<Character> str = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
-        List<Character> str1 = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
-        System.out.println(str);
-        System.out.println(str1);
-        for (int i = 0; i < pattern.length(); i++) {
-            for (int j = 0; j < chars.length(); j++) {
+        List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
 
+        List<Character> res = new ArrayList<>();
+        for (int i = 0, j = 0; j < chars.length() & i < pattern.length(); j++)
+            if (listFromPattern.get(i) == randomSequence.get(j)) {
+                res.add(listFromPattern.get(i));
+                i++;
             }
-        }
-
-
-        return false;
+        return res.equals(listFromPattern);
     }
 }
