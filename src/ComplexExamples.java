@@ -64,6 +64,7 @@ public class ComplexExamples {
 
 
         Map<String, List<Integer>> mp = Stream.of(person)
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.groupingBy(Person::getName,
                         Collectors.mapping(Person::getId, Collectors.toList())));
@@ -149,6 +150,8 @@ public class ComplexExamples {
         System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
         //System.out.println(outSumma(new Integer[]{3, 4, 2, 7, 8}, 10));
 
+        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
+
 
         /*
         Task1
@@ -191,34 +194,32 @@ public class ComplexExamples {
     }
 
     static List<Integer> outSumma(Integer[] array, int summa) {
-        List<Integer> res = new ArrayList<>();
-
+        List<Integer> listFromArray = new ArrayList<>();
 
         if (array.equals(null)) return null;
         for (int i = 0; i < array.length; i++) {
             for (int j = 1; j < array.length; j++) {
                 if (summa - array[j] == array[i]) {
-                    res.add(array[i]);
-                    res.add(array[j]);
+                    listFromArray.add(array[i]);
+                    listFromArray.add(array[j]);
                 }
             }
         }
+        return listFromArray.stream().distinct().collect(Collectors.toList());
+    }
 
-        List<Integer> l = Arrays.asList(array);
+    static boolean fuzzySearch(String pattern, String chars) {
+        List<Character> str = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        List<Character> str1 = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        System.out.println(str);
+        System.out.println(str1);
+        for (int i = 0; i < pattern.length(); i++) {
+            for (int j = 0; j < chars.length(); j++) {
 
-        //List<Integer> l = Arrays.asList(array);
-        //int[] result = l.stream().collect(Collectors.reducing((integer, integer2) -> integer+integer2).filter(o->summa==o);
-
-        //int[] result = Arrays.stream(array).filter((s1,s2)->(s1+s2)==summa).collect(Collectors.toList());
-        // System.out.println(Arrays.stream(array).reduce((s1, s2) -> s1 + s2).getAsInt());
-        //Integer res1 = l.stream().filter((w1, w2) -> w1 + w2 == summa).reduce((s1, s2) -> (s1 + s2));
-        //System.out.println(res1);
+            }
+        }
 
 
-        //l.stream().collect(Comparator.comparing(summa==l.array[i]+array[i+1]))
-
-        //res.stream().forEach(System.out::println);
-        List<Integer> resDist = res.stream().distinct().collect(Collectors.toList());
-        return resDist;
+        return false;
     }
 }
