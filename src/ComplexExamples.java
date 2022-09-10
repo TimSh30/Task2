@@ -95,13 +95,6 @@ public class ComplexExamples {
         1 - Jack (4)
      */
 
-//    @Override
-//    public String toString() {
-//        System.out.println("[");
-//        System.out.println();
-//        System.out.println("]");
-//        return super.toString();
-//    }
 
     public static void main(String[] args) {
         System.out.println("Raw data:");
@@ -120,20 +113,18 @@ public class ComplexExamples {
         System.out.print("Test 1: ");
         sortByName(RAW_DATA);
 
-        //sortByName(null);
-
-        //System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
         System.out.print("Test 2: ");
-        //System.out.println(outSumma(null, 10));
         System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
+
         System.out.print("Test 3: ");
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
-        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
         System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
         System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
         System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
         System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
         System.out.println(fuzzySearch("lw", "cartwheel")); // false
+
+        testMethod();
 
 
         /*
@@ -198,15 +189,29 @@ public class ComplexExamples {
     }
 
     static boolean fuzzySearch(String pattern, String chars) {
-        List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
-        List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        try {
+            List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+            List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
 
-        List<Character> res = new ArrayList<>();
-        for (int i = 0, j = 0; j < chars.length() & i < pattern.length(); j++)
-            if (listFromPattern.get(i) == randomSequence.get(j)) {
-                res.add(listFromPattern.get(i));
-                i++;
-            }
-        return res.equals(listFromPattern);
+            List<Character> res = new ArrayList<>();
+            for (int i = 0, j = 0; j < chars.length() & i < pattern.length(); j++)
+                if (listFromPattern.get(i) == randomSequence.get(j)) {
+                    res.add(listFromPattern.get(i));
+                    i++;
+                }
+            return res.equals(listFromPattern);
+        } catch (NullPointerException NPE) {
+            System.out.println("pattern has null");
+            NPE.printStackTrace();
+            return false;
+        }
+    }
+
+    static void testMethod() {
+        System.out.print("\nTests: ");
+        assert fuzzySearch("yes", "pydge@js") : "fuzzySearch  test failed";
+        // assert fuzzySearch(null, "pydge@js")==false:"fuzzySearch  null test failed";
+        assert (outSumma(new Integer[]{1, 5, 15, 25}, 16)).stream().reduce(Integer::sum).get() == 16 : "outSumma  test failed";
+        System.out.print("Tests passed");
     }
 }
