@@ -114,7 +114,7 @@ public class ComplexExamples {
         sortByName(RAW_DATA);
 
         System.out.print("Test 2: ");
-        System.out.println(outSumma(new Integer[]{3, 4, 2, 7}, 10));
+        System.out.println(outSumma(new Integer[]{3, 4, 2, 7, 8, 9, 1, 3}, 12));
 
         System.out.print("Test 3: ");
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
@@ -172,13 +172,14 @@ public class ComplexExamples {
         List<Integer> listFromArray = new ArrayList<>();
         try {
             for (Integer integer : array) {
-                int j = 1;
+                int j = 0;
                 while (j < array.length) {
                     if (summa - array[j] == integer) {
                         listFromArray.add(integer);
                         listFromArray.add(array[j]);
                     }
                     j++;
+                    if (listFromArray.size() == 2) break;
                 }
             }
             return listFromArray.stream().distinct().collect(Collectors.toList());
