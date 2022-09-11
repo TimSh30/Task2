@@ -3,6 +3,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.*;
+
 public class ComplexExamples {
 
     static class Person {
@@ -168,6 +170,7 @@ public class ComplexExamples {
     }
 
     static List<Integer> outSumma(Integer[] array, int summa) {
+        if (array.length <= 1) return asList(new Integer[]{});
 
         List<Integer> listFromArray = new ArrayList<>();
         try {
@@ -185,7 +188,7 @@ public class ComplexExamples {
             return listFromArray.stream().distinct().collect(Collectors.toList());
         } catch (NullPointerException NPE) {
             System.out.println("array has null");
-            return null;
+            return asList(new Integer[]{});
         }
     }
 
