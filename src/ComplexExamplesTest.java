@@ -37,7 +37,7 @@ class ComplexExamplesTest {
 
     @Test
     void checkFuzzySearchInNotOrderString() {
-        assertTrue(ComplexExamples.fuzzySearch("tri", "okprnth67wie"));
+        assertFalse(ComplexExamples.fuzzySearch("tri", "okprnth67wie"));
     }
     @Test
     void checkFuzzySearchOnNull() {
