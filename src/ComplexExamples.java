@@ -119,12 +119,13 @@ public class ComplexExamples {
         System.out.println(outSumma(new Integer[]{3, 4, 2, 7, 8, 9, 1, 3}, 12));
 
         System.out.print("Test 3: ");
-        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
-        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
-        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
-        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
-        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
-        System.out.println(fuzzySearch("lw", "cartwheel")); // false
+//        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
+//        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
+//        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
+//        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
+//        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
+        //System.out.println(fuzzySearch("lw", "cartwheel")); // false
+        System.out.println(fuzzySearch(null, "cartwheel")); // false
 
         testMethod();
 
@@ -193,16 +194,20 @@ public class ComplexExamples {
     }
 
     static boolean fuzzySearch(String pattern, String chars) {
+
         try {
             List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
             List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
 
             List<Character> res = new ArrayList<>();
-            for (int i = 0, j = 0; j < chars.length() & i < pattern.length(); j++)
+
+            for (int i = 0, j = 0; i < pattern.length() && j < chars.length(); j++) {
                 if (listFromPattern.get(i) == randomSequence.get(j)) {
                     res.add(listFromPattern.get(i));
                     i++;
                 }
+            }
+
             return res.equals(listFromPattern);
         } catch (NullPointerException NPE) {
             System.out.println("pattern has null");
