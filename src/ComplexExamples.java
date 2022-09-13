@@ -119,15 +119,13 @@ public class ComplexExamples {
         System.out.println(outSumma(new Integer[]{3, 4, 2, 7, 8, 9, 1, 3}, 12));
 
         System.out.print("Test 3: ");
-//        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
-//        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
-//        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
-//        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
-//        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
-        //System.out.println(fuzzySearch("lw", "cartwheel")); // false
-        System.out.println(fuzzySearch(null, "cartwheel")); // false
+        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel"));
+        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
+        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
+        System.out.println(fuzzySearch("lw", "cartwheel")); // false
 
-        testMethod();
 
 
         /*
@@ -171,56 +169,46 @@ public class ComplexExamples {
     }
 
     static List<Integer> outSumma(Integer[] array, int summa) {
-        if (array.length <= 1) return asList(new Integer[]{});
-
+        if (array.length == 1) return asList(new Integer[]{});
         List<Integer> listFromArray = new ArrayList<>();
-        try {
-            for (Integer integer : array) {
-                int j = 0;
-                while (j < array.length) {
+
+        for (Integer integer : array) {
+            int j = 0;
+            while (j < array.length) {
+
+                try {
                     if (summa - array[j] == integer) {
                         listFromArray.add(integer);
                         listFromArray.add(array[j]);
                     }
                     j++;
                     if (listFromArray.size() == 2) break;
+                } catch (NullPointerException NPE) {
+                    System.out.println("array has null");
+                    return asList(new Integer[]{});
                 }
             }
-            return listFromArray.stream().distinct().collect(Collectors.toList());
-        } catch (NullPointerException NPE) {
-            System.out.println("array has null");
-            return asList(new Integer[]{});
         }
+        return listFromArray.stream().distinct().collect(Collectors.toList());
     }
+
 
     static boolean fuzzySearch(String pattern, String chars) {
 
-        try {
-            List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
-            List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        if (chars == null || pattern == null) return false;
 
-            List<Character> res = new ArrayList<>();
+        List<Character> res = new ArrayList<>();
+        List<Character> listFromPattern = pattern.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
+        
+        List<Character> randomSequence = chars.chars().mapToObj(w -> (char) w).collect(Collectors.toList());
 
-            for (int i = 0, j = 0; i < pattern.length() && j < chars.length(); j++) {
-                if (listFromPattern.get(i) == randomSequence.get(j)) {
-                    res.add(listFromPattern.get(i));
-                    i++;
-                }
+        for (int i = 0, j = 0; i < pattern.length() && j < chars.length(); j++) {
+            if (listFromPattern.get(i) == randomSequence.get(j)) {
+                res.add(listFromPattern.get(i));
+                i++;
             }
-
-            return res.equals(listFromPattern);
-        } catch (NullPointerException NPE) {
-            System.out.println("pattern has null");
-            NPE.printStackTrace();
-            return false;
         }
+        return res.equals(listFromPattern);
     }
 
-    static void testMethod() {
-        System.out.print("\nTests: ");
-        assert fuzzySearch("yes", "pydge@js") : "fuzzySearch  test failed";
-        // assert fuzzySearch(null, "pydge@js")==false:"fuzzySearch  null test failed";
-        assert (outSumma(new Integer[]{1, 5, 15, 25}, 16)).stream().reduce(Integer::sum).get() == 16 : "outSumma  test failed";
-        System.out.print("Tests passed");
-    }
 }
